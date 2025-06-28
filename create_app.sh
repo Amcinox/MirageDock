@@ -119,6 +119,10 @@ if [ -f "MirageDock.entitlements" ]; then
     cp "MirageDock.entitlements" "$RESOURCES_DIR/"
 fi
 
+# Code sign the app to prevent "damaged" warnings
+echo "Code signing app..."
+codesign --force --deep --sign - "$APP_DIR"
+
 echo ""
 echo "✅ Successfully created $APP_DIR!"
 echo ""

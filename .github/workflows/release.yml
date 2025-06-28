@@ -33,6 +33,11 @@ jobs:
                   chmod +x create_app.sh
                   ./create_app.sh
 
+            - name: Code Sign App
+              run: |
+                  # Code sign the app to prevent "damaged" warnings
+                  codesign --force --deep --sign - MirageDock.app
+
             - name: Create DMG
               run: |
                   # Create a DMG for easier distribution
