@@ -3,14 +3,9 @@
 .swiftpm/
 Package.resolved
 
-# Xcode
-*.xcodeproj/*
-!*.xcodeproj/project.pbxproj
-!*.xcodeproj/xcshareddata/
-!*.xcodeproj/project.xcworkspace/
-*.xcworkspace/*
-!*.xcworkspace/contents.xcworkspacedata
-!*.xcworkspace/xcshareddata/
+# Xcode (ignoring entire project since we use SPM)
+*.xcodeproj/
+*.xcworkspace/
 *.xcuserstate
 *.xcuserdata/
 
