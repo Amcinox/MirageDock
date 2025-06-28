@@ -3,6 +3,7 @@ import PackageDescription
 
 let package = Package(
     name: "MirageDock",
+    version: "1.0.0",
     platforms: [
         .macOS(.v13)
     ],
@@ -16,7 +17,11 @@ let package = Package(
             path: ".",
             exclude: [
                 "README.md",
-                "Info.plist"
+                "Info.plist",
+                ".github",
+                "assets",
+                "create_app.sh",
+                "logo.icns"
             ],
             sources: [
                 "MirageDockApp.swift",

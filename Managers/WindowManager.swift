@@ -13,7 +13,6 @@ class WindowManager: ObservableObject {
     func openPreferences() {
         if let window = preferencesWindow {
             window.makeKeyAndOrderFront(nil)
-            NSApp.setActivationPolicy(.regular)
             NSApp.activate(ignoringOtherApps: true)
             return
         }
@@ -43,19 +42,16 @@ class WindowManager: ObservableObject {
         preferencesWindow = window
         
         window.makeKeyAndOrderFront(nil)
-        NSApp.setActivationPolicy(.regular)
         NSApp.activate(ignoringOtherApps: true)
     }
     
     func closePreferences() {
         preferencesWindow?.close()
-        NSApp.setActivationPolicy(.accessory)
     }
     
     func openAbout() {
         if let window = aboutWindow {
             window.makeKeyAndOrderFront(nil)
-            NSApp.setActivationPolicy(.regular)
             NSApp.activate(ignoringOtherApps: true)
             return
         }
@@ -82,13 +78,13 @@ class WindowManager: ObservableObject {
         aboutWindow = window
         
         window.makeKeyAndOrderFront(nil)
-        NSApp.setActivationPolicy(.regular)
         NSApp.activate(ignoringOtherApps: true)
     }
 }
 
 class WindowDelegate: NSObject, NSWindowDelegate {
     func windowWillClose(_ notification: Notification) {
-        NSApp.setActivationPolicy(.accessory)
+        // Keep the app as regular instead of switching back to accessory
+        // This allows the app to remain visible in the dock and Launchpad
     }
 } 

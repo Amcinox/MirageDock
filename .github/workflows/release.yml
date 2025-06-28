@@ -1,0 +1,120 @@
+name: Build and Release
+
+on:
+    push:
+        branches: [main]
+    workflow_dispatch:
+
+jobs:
+    build:
+        runs-on: macos-latest
+
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
+              with:
+                  fetch-depth: 0 # Fetch all history for proper versioning
+
+            - name: Setup Swift
+              uses: swift-actions/setup-swift@v2
+              with:
+                  swift-version: "5.9"
+
+            - name: Build Release
+              run: |
+                  swift build --configuration release
+
+            - name: Create App Bundle
+              run: |
+                  chmod +x create_app.sh
+                  ./create_app.sh
+
+            - name: Create DMG
+              run: |
+                  # Create a DMG for easier distribution
+                  hdiutil create -volname "MirageDock" -srcfolder MirageDock.app -ov -format UDZO MirageDock.dmg
+
+            - name: Get Version
+              id: version
+              run: |
+                  # Extract version from Package.swift or use git tag
+                  VERSION=$(grep -o 'version: "[^"]*"' Package.swift | cut -d'"' -f2 || echo "1.0.0")
+                  echo "version=$VERSION" >> $GITHUB_OUTPUT
+                  echo "tag=v$VERSION" >> $GITHUB_OUTPUT
+
+            - name: Create Release
+              id: create_release
+              uses: actions/create-release@v1
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+              with:
+                  tag_name: ${{ steps.version.outputs.tag }}
+                  release_name: MirageDock ${{ steps.version.outputs.version }}
+                  body: |
+                      ## 🚀 MirageDock ${{ steps.version.outputs.version }}
+
+                      ### ✨ What's New
+                      - Enhanced Settings UI with categorized editor selection
+                      - Fixed Cursor editor detection
+                      - Improved card interaction with full-area clickability
+                      - Custom app icon support
+                      - Sandbox-compatible editor integration
+
+                      ### 🎯 Features
+                      - **Multi-Editor Support**: VS Code, Cursor, Sublime Text, Atom, Vim, JetBrains IDEs, Xcode, and custom editors
+                      - **Smart Detection**: Automatically detects installed editors
+                      - **Menu Bar Integration**: Always accessible from menu bar
+                      - **Project Management**: Organize repositories by projects
+                      - **Modern UI**: Beautiful, responsive interface
+
+                      ### 📦 Installation
+                      1. Download `MirageDock.dmg`
+                      2. Drag MirageDock to Applications
+                      3. Launch and configure your preferred editor
+
+                      ### 🔧 Requirements
+                      - macOS 13.0 or later
+                      - Your preferred code editor (optional)
+
+                      ### 📝 Changelog
+                      - Fixed Cursor editor bundle identifier
+                      - Enhanced Settings UI with better visual hierarchy
+                      - Improved editor card interaction
+                      - Added custom icon support
+                      - Fixed sandbox compatibility issues
+
+                      ### 🏗️ Build Info
+                      - Built with Swift 5.9
+                      - macOS 13.0+ compatible
+                      - Sandboxed for security
+
+                      ---
+
+                      **Built automatically on ${{ github.event.head_commit.timestamp }}**
+                  draft: false
+                  prerelease: false
+
+            - name: Upload App Bundle
+              uses: actions/upload-release-asset@v1
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+              with:
+                  upload_url: ${{ steps.create_release.outputs.upload_url }}
+                  asset_path: ./MirageDock.app.zip
+                  asset_name: MirageDock.app.zip
+                  asset_content_type: application/zip
+
+            - name: Upload DMG
+              uses: actions/upload-release-asset@v1
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+              with:
+                  upload_url: ${{ steps.create_release.outputs.upload_url }}
+                  asset_path: ./MirageDock.dmg
+                  asset_name: MirageDock.dmg
+                  asset_content_type: application/x-apple-diskimage
+
+            - name: Create App Bundle Zip
+              run: |
+                  # Create a zip file of the app bundle for direct download
+                  ditto -c -k --sequesterRsrc --keepParent MirageDock.app MirageDock.app.zip

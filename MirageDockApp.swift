@@ -6,8 +6,19 @@ struct MirageDockApp: App {
     @NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     
     var body: some Scene {
+        // Main window that shows the preferences/project management interface
+        WindowGroup("MirageDock") {
+            PreferencesView()
+                .environmentObject(ProjectManager.shared)
+                .frame(minWidth: 800, minHeight: 600)
+        }
+        .windowStyle(.hiddenTitleBar)
+        .windowToolbarStyle(.unified)
+        
+        // Settings window (can be accessed from menu)
         Settings {
-            EmptyView()
+            PreferencesView()
+                .environmentObject(ProjectManager.shared)
         }
     }
 }
@@ -17,7 +28,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     var menuBarManager: MenuBarManager?
     
     func applicationDidFinishLaunching(_ notification: Notification) {
-        // Create status item
+        // Set as regular app so it appears in Launchpad and dock
+        NSApp.setActivationPolicy(.regular)
+        
+        // Create status item for menu bar access
         statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
         
         if let button = statusItem?.button {
@@ -28,17 +42,23 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         
         // Initialize menu bar manager
         menuBarManager = MenuBarManager(statusItem: statusItem)
-        
-        // Set as menu bar only app (no dock icon)
-        NSApp.setActivationPolicy(.accessory)
-        
-        // Hide all windows on launch
-        for window in NSApp.windows {
-            window.orderOut(nil)
-        }
     }
     
     func applicationShouldTerminateAfterLastWindowClosed(_ sender: NSApplication) -> Bool {
+        // Keep the app running even when all windows are closed (for menu bar access)
         return false
+    }
+    
+    func applicationShouldHandleReopen(_ sender: NSApplication, hasVisibleWindows flag: Bool) -> Bool {
+        // Show main window when clicking on dock icon
+        if !flag {
+            for window in sender.windows {
+                if window.title == "MirageDock" {
+                    window.makeKeyAndOrderFront(nil)
+                    return true
+                }
+            }
+        }
+        return true
     }
 } 

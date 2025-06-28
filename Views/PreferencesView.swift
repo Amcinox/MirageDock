@@ -4,9 +4,10 @@ struct PreferencesView: View {
     @EnvironmentObject var projectManager: ProjectManager
     @State private var selectedProject: Project?
     @State private var showingAddProject = false
+    @State private var showingSettings = false
     
     var body: some View {
-        NavigationView {
+        NavigationSplitView {
             // Beautiful Sidebar
             VStack(spacing: 0) {
                 // Header
@@ -88,11 +89,47 @@ struct PreferencesView: View {
                         }
                         .padding(.bottom, 8)
                     }
+                    
+                    // Settings Section
+                    Section {
+                        Button(action: { showingSettings = true }) {
+                            HStack(spacing: 12) {
+                                Image(systemName: "gear")
+                                    .font(.title3)
+                                    .foregroundColor(.orange)
+                                    .frame(width: 32, height: 32)
+                                
+                                VStack(alignment: .leading, spacing: 4) {
+                                    Text("Settings")
+                                        .font(.headline)
+                                        .foregroundColor(.primary)
+                                    
+                                    Text("Configure editor preferences")
+                                        .font(.caption)
+                                        .foregroundColor(.secondary)
+                                }
+                                
+                                Spacer()
+                                
+                                Image(systemName: "chevron.right")
+                                    .font(.caption)
+                                    .foregroundColor(.secondary)
+                            }
+                            .padding(.vertical, 8)
+                            .padding(.horizontal, 4)
+                        }
+                        .buttonStyle(.plain)
+                    } header: {
+                        Text("Preferences")
+                            .font(.headline)
+                            .foregroundColor(.primary)
+                            .padding(.bottom, 8)
+                    }
                 }
                 .listStyle(.sidebar)
             }
             .frame(minWidth: 280)
-            
+        } detail: {
             // Enhanced Detail view
             if let selectedProject = selectedProject {
                 ProjectDetailView(project: selectedProject)
@@ -134,6 +171,10 @@ struct PreferencesView: View {
         .frame(minWidth: 900, minHeight: 600)
         .sheet(isPresented: $showingAddProject) {
             AddProjectView()
+                .environmentObject(ProjectManager.shared)
+        }
+        .sheet(isPresented: $showingSettings) {
+            SettingsView()
                 .environmentObject(ProjectManager.shared)
         }
         .onAppear {

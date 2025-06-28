@@ -1,90 +1,89 @@
 # MirageDock
 
-A lightweight macOS menu bar app for managing coding projects and repositories. Built with Swift, SwiftUI, and AppKit.
+A beautiful, modern macOS menu bar app for managing coding projects and repositories with multi-editor support. Built with Swift, SwiftUI, and AppKit.
 
 ![MirageDock Menu Bar](assets/menu-bar-select-repo.png)
 
-## Features
+## ✨ Features
 
-### 🎯 Menu Bar Integration
+### 🎯 Multi-Editor Support
 
--   Stays in the menu bar when the main window is closed
--   Always visible terminal icon in the menu bar
--   Clean dropdown menu interface
-
-### 📁 Project Management
-
--   Create, edit, and delete projects
--   Each project can contain multiple repositories
--   Organize repositories with custom names
--   Folder path validation
-
-![Create Project](assets/create-project.png)
-
-### 🚀 VS Code Integration
-
--   One-click repository opening in VS Code
--   Automatic fallback to Finder if VS Code CLI is not available
--   Path validation with visual indicators
-
-### 💾 Data Persistence
-
--   Projects and repositories stored locally using UserDefaults
--   JSON-based serialization for reliability
--   Automatic data loading on app launch
+-   **VS Code** - Microsoft's popular code editor
+-   **Cursor** - AI-powered code editor
+-   **Sublime Text** - Fast and lightweight editor
+-   **Atom** - Hackable text editor
+-   **Vim/Neovim** - Terminal-based editors
+-   **JetBrains IDEs** - IntelliJ, WebStorm, PhpStorm, PyCharm
+-   **Xcode** - Apple's development IDE
+-   **Custom Editors** - Support for any command-line editor
 
 ### 🎨 Modern UI
 
--   Native SwiftUI interface
--   Sidebar navigation for easy project browsing
--   Modal sheets for adding/editing projects and repositories
--   Folder browser integration using NSOpenPanel
+-   **Beautiful Settings Interface** - Categorized editor selection with hover effects
+-   **Smart Detection** - Automatically detects installed editors
+-   **Full-Area Interaction** - Click anywhere on editor cards
+-   **Responsive Design** - Works on all macOS screen sizes
+-   **Custom Icons** - Professional app branding
 
-![Add Repository](assets/add-repository.png)
+### 📁 Project Management
 
-## Requirements
+-   **Organize by Projects** - Group repositories logically
+-   **Repository Management** - Add, edit, and delete repositories
+-   **Path Validation** - Real-time folder path checking
+-   **Menu Bar Integration** - Always accessible from menu bar
 
--   macOS Ventura (13.0) or later
--   VS Code with CLI tools installed (optional)
+### 🔧 Technical Features
 
-## Setup Instructions
+-   **Sandbox Compatible** - Works in both development and production
+-   **Smart Fallbacks** - App integration → Command line → Finder
+-   **Data Persistence** - Projects saved locally with UserDefaults
+-   **Modern Architecture** - SwiftUI + AppKit with MVVM pattern
 
-### 1. Install VS Code CLI (Recommended)
+## 🚀 Quick Start
 
-For the best experience, install the VS Code command line tools:
+### Download Latest Release
 
-1. Open VS Code
-2. Press `Cmd+Shift+P` to open the command palette
-3. Type "Shell Command: Install 'code' command in PATH"
-4. Select the command and run it
+1. Go to [Releases](https://github.com/yourusername/MirageDock/releases)
+2. Download `MirageDock.dmg`
+3. Drag MirageDock to Applications
+4. Launch and configure your preferred editor
 
-### 2. Build and Run
-
-#### Option A: Using Xcode (Recommended)
-
-1. Open the project folder directly in Xcode (File > Open)
-2. Xcode will automatically recognize the Package.swift file
-3. Select the MirageDock scheme
-4. Build and run (`Cmd+R`)
-
-#### Option B: Using Swift Package Manager
+### From Source
 
 ```bash
-# Build the project
-swift build
+# Clone the repository
+git clone https://github.com/yourusername/MirageDock.git
+cd MirageDock
 
-# Run the app (from command line)
+# Build and run
+swift build
 swift run
 
-# Or run the built executable
-./.build/debug/MirageDock
+# Or create app bundle
+swift build --configuration release
+./create_app.sh
 ```
 
-## Usage
+## 📦 Installation
+
+### Requirements
+
+-   macOS 13.0 (Ventura) or later
+-   Your preferred code editor (optional)
+
+### Setup Steps
+
+1. **Download** the latest release from GitHub
+2. **Install** by dragging to Applications folder
+3. **Launch** MirageDock from Applications or Spotlight
+4. **Configure** your preferred editor in Settings
+5. **Add Projects** and repositories to get started
+
+## 🎯 Usage
 
 ### First Launch
 
-1. The app will appear in your menu bar as a terminal icon
+1. MirageDock appears in your menu bar as a terminal icon
 2. Click the icon to see the dropdown menu
 3. Select "Preferences" to start adding projects
 
@@ -93,127 +92,159 @@ swift run
 1. In Preferences, click "Add Project" to create a new project
 2. Give your project a name
 3. Add repositories by clicking "Add Repository"
-4. Use the "Browse..." button to select folder paths
-5. Repository names will auto-fill from folder names
+4. Use "Browse" to select folder paths
+5. Repository names auto-fill from folder names
 
 ### Opening Repositories
 
 1. Click the menu bar icon
-2. Navigate to Projects > [Your Project] > [Repository]
-3. Click on a repository name to open it in VS Code
+2. Navigate to Projects → [Your Project] → [Repository]
+3. Click on a repository to open it in your selected editor
 
-### Menu Structure
+### Configuring Editors
 
+1. Open Settings from the sidebar
+2. Choose your preferred editor from the categorized list
+3. For custom editors, select "Custom Editor" and enter the command
+4. Settings are automatically saved
+
+## 🛠️ Development
+
+### Prerequisites
+
+-   Xcode 15.0 or later
+-   macOS 13.0 or later
+-   Swift 5.9
+
+### Building from Source
+
+```bash
+# Clone repository
+git clone https://github.com/yourusername/MirageDock.git
+cd MirageDock
+
+# Build debug version
+swift build
+
+# Run in development
+swift run
+
+# Build release version
+swift build --configuration release
+
+# Create app bundle
+./create_app.sh
 ```
-MirageDock Menu
-├── Projects
-│   ├── Project 1
-│   │   ├── Repository A
-│   │   └── Repository B
-│   └── Project 2
-│       └── Repository C
-├── ──────────────
-├── Preferences
-├── ──────────────
-└── Quit MirageDock
-```
 
-## Features in Detail
-
-### Menu Bar Behavior
-
--   **Persistent**: App stays running when all windows are closed
--   **Accessory**: Doesn't appear in the dock, only in the menu bar
--   **System Integration**: Uses native NSStatusBar for menu bar integration
-
-### Project Organization
-
--   **Hierarchical**: Projects contain multiple repositories
--   **Flexible**: Custom names for both projects and repositories
--   **Validated**: Real-time path validation with visual feedback
-
-![Manage Project Repositories](assets/manage-project-repos.png)
-
-### Data Storage
-
--   **Local**: All data stored in macOS UserDefaults
--   **Portable**: JSON format for easy backup/restore
--   **Persistent**: Data survives app restarts and system reboots
-
-## File Structure
+### Project Structure
 
 ```
 MirageDock/
-├── MirageDockApp.swift          # Main app entry point and AppDelegate
+├── MirageDockApp.swift          # Main app entry point
 ├── Models/
-│   └── Project.swift            # Data models for Project and Repository
+│   └── Project.swift            # Data models and editor definitions
 ├── Managers/
-│   └── ProjectManager.swift     # CRUD operations and persistence
+│   └── ProjectManager.swift     # Business logic and persistence
 ├── MenuBar/
-│   └── MenuBarManager.swift     # Menu bar integration and menu setup
+│   └── MenuBarManager.swift     # Menu bar integration
 ├── Views/
 │   ├── PreferencesView.swift    # Main preferences window
-│   ├── ProjectDetailView.swift  # Project editing interface
+│   ├── SettingsView.swift       # Editor settings interface
+│   ├── ProjectDetailView.swift  # Project management
 │   ├── AddProjectView.swift     # New project creation
 │   ├── AddRepositoryView.swift  # New repository addition
 │   └── EditRepositoryView.swift # Repository editing
-├── Package.swift                # Swift Package Manager configuration
-├── Info.plist                   # App configuration
-└── README.md                    # This file
+├── Package.swift                # Swift Package Manager config
+├── create_app.sh               # App bundle creation script
+├── logo.icns                   # Custom app icon
+└── README.md                   # This file
 ```
-
-## Development
 
 ### Architecture
 
--   **SwiftUI**: Modern declarative UI framework
--   **AppKit**: Menu bar integration via NSStatusBar
--   **MVVM**: Model-View-ViewModel architecture
--   **ObservableObject**: Reactive data flow with ProjectManager
+-   **SwiftUI** - Modern declarative UI framework
+-   **AppKit** - Menu bar integration via NSStatusBar
+-   **MVVM** - Model-View-ViewModel architecture
+-   **ObservableObject** - Reactive data flow
+-   **UserDefaults** - Local data persistence
 
-### Key Components
+## 🔧 Configuration
 
--   **AppDelegate**: Handles menu bar setup and app lifecycle
--   **ProjectManager**: Central data management with ObservableObject
--   **MenuBarManager**: Dynamic menu generation based on project data
--   **Views**: SwiftUI views for all user interfaces
+### Editor Integration
 
-## Troubleshooting
+MirageDock supports multiple integration methods:
 
-### VS Code Not Opening
+1. **App Integration** - Direct folder opening with editor app
+2. **Command Line** - Uses editor's CLI tool as fallback
+3. **Finder Fallback** - Opens in Finder as last resort
 
--   Ensure VS Code CLI is installed (see setup instructions)
--   Check that `code` command works in Terminal
--   App will fallback to opening folders in Finder
+### Supported Editors
 
-### Menu Not Updating
+| Editor       | Bundle ID                       | Command      | Status |
+| ------------ | ------------------------------- | ------------ | ------ |
+| VS Code      | `com.microsoft.VSCode`          | `code`       | ✅     |
+| Cursor       | `com.todesktop.230313mzl4w4u92` | `cursor`     | ✅     |
+| Sublime Text | `com.sublimetext.4`             | `subl`       | ✅     |
+| Atom         | `com.github.atom`               | `atom`       | ✅     |
+| Vim          | `org.vim.MacVim`                | `vim`        | ✅     |
+| Neovim       | `io.neovim.nvim`                | `nvim`       | ✅     |
+| IntelliJ     | `com.jetbrains.intellij`        | `idea`       | ✅     |
+| WebStorm     | `com.jetbrains.WebStorm`        | `webstorm`   | ✅     |
+| PhpStorm     | `com.jetbrains.PhpStorm`        | `phpstorm`   | ✅     |
+| PyCharm      | `com.jetbrains.PyCharm`         | `pycharm`    | ✅     |
+| Xcode        | `com.apple.dt.Xcode`            | `xed`        | ✅     |
+| Custom       | -                               | User-defined | ✅     |
 
--   Preferences window automatically refreshes the menu
--   Restart the app if issues persist
+## 🤝 Contributing
 
-### Data Loss
+### Development Setup
 
--   Data is stored in UserDefaults under the key "SavedProjects"
--   You can backup/restore this data using defaults commands:
+1. Fork the repository
+2. Create a feature branch: `git checkout -b feature/amazing-feature`
+3. Make your changes
+4. Test thoroughly
+5. Commit: `git commit -m 'Add amazing feature'`
+6. Push: `git push origin feature/amazing-feature`
+7. Open a Pull Request
 
-```bash
-# Export settings
-defaults export com.yourname.MirageDock mirage-backup.plist
+### Guidelines
 
-# Import settings
-defaults import com.yourname.MirageDock mirage-backup.plist
-```
+-   Follow Swift style guidelines
+-   Add tests for new features
+-   Update documentation
+-   Ensure sandbox compatibility
+-   Test on different macOS versions
 
-## Contributing
+## 📝 Changelog
 
-This is a single-file project structure designed for simplicity and easy modification. Feel free to extend it with additional features like:
+### v1.0.0
 
--   Different editor integrations (IntelliJ, Sublime Text, etc.)
--   Git repository status indicators
--   Recent projects quick access
--   Keyboard shortcuts
--   Custom project templates
+-   ✨ Initial release
+-   🎨 Modern Settings UI with categorized editor selection
+-   🔧 Multi-editor support (VS Code, Cursor, Sublime, etc.)
+-   🎯 Smart editor detection and fallback system
+-   📱 Menu bar integration
+-   🛡️ Sandbox compatibility
+-   🎨 Custom app icon support
+-   🖱️ Full-area card interaction
+-   📁 Project and repository management
 
-## License
+## 📄 License
 
-[Add your license here]
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 🙏 Acknowledgments
+
+-   Built with SwiftUI and AppKit
+-   Icons from SF Symbols
+-   Inspired by modern macOS development tools
+
+## 📞 Support
+
+-   **Issues**: [GitHub Issues](https://github.com/yourusername/MirageDock/issues)
+-   **Discussions**: [GitHub Discussions](https://github.com/yourusername/MirageDock/discussions)
+-   **Releases**: [GitHub Releases](https://github.com/yourusername/MirageDock/releases)
+
+---
+
+**Made with ❤️ for the macOS developer community**

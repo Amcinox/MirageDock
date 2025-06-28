@@ -229,7 +229,7 @@ struct RepositoryRowView: View {
             // Action Buttons
             HStack(spacing: 8) {
                 Button {
-                    projectManager.openInVSCode(repository)
+                    projectManager.openInEditor(repository)
                 } label: {
                     Image(systemName: "chevron.left.forwardslash.chevron.right")
                         .font(.system(size: 14, weight: .medium))
@@ -242,7 +242,7 @@ struct RepositoryRowView: View {
                 }
                 .buttonStyle(.plain)
                 .disabled(!repository.isValidPath)
-                .help("Open in VS Code")
+                .help("Open in \(projectManager.selectedEditor.displayName)")
                 
                 Button {
                     onEdit()

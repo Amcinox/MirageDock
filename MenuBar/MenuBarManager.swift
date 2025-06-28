@@ -108,7 +108,7 @@ class MenuBarManager: ObservableObject {
     
     @objc private func openRepository(_ sender: NSMenuItem) {
         guard let repository = sender.representedObject as? Repository else { return }
-        projectManager.openInVSCode(repository)
+        projectManager.openInEditor(repository)
     }
     
     @objc private func openPreferences() {

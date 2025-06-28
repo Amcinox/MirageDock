@@ -15,42 +15,65 @@ struct EditRepositoryView: View {
     @State private var errorMessage = ""
     
     var body: some View {
-        NavigationView {
-            VStack(spacing: 20) {
-                Text("Edit Repository")
-                    .font(.largeTitle)
-                    .padding()
-                
-                VStack(alignment: .leading, spacing: 16) {
+        VStack(spacing: 0) {
+            // Simple Header
+            VStack(spacing: 12) {
+                HStack {
+                    Image(systemName: "pencil.circle.fill")
+                        .font(.title)
+                        .foregroundColor(.orange)
+                    
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text("Edit Repository")
+                            .font(.title2.bold())
+                        
+                        Text("Update \"\(repository.name)\" in \"\(project.name)\"")
+                            .font(.subheadline)
+                            .foregroundColor(.secondary)
+                    }
+                    
+                    Spacer()
+                }
+            }
+            .padding()
+            .background(Color(.controlBackgroundColor))
+            
+            // Form Section
+            ScrollView {
+                VStack(spacing: 20) {
+                    // Repository Name
                     VStack(alignment: .leading, spacing: 8) {
                         Text("Repository Name")
                             .font(.headline)
                         
                         TextField("Enter repository name", text: $repositoryName)
-                            .textFieldStyle(RoundedBorderTextFieldStyle())
+                            .textFieldStyle(.roundedBorder)
                     }
                     
+                    // Description
                     VStack(alignment: .leading, spacing: 8) {
                         Text("Description (Optional)")
                             .font(.headline)
                         
-                        TextField("Enter repository description", text: $repositoryDescription, axis: .vertical)
-                            .textFieldStyle(RoundedBorderTextFieldStyle())
-                            .lineLimit(2...4)
+                        TextField("Enter description", text: $repositoryDescription, axis: .vertical)
+                            .textFieldStyle(.roundedBorder)
+                            .lineLimit(2...3)
                     }
                     
+                    // Folder Path
                     VStack(alignment: .leading, spacing: 8) {
                         Text("Folder Path")
                             .font(.headline)
                         
                         HStack {
                             TextField("Select folder path", text: $repositoryPath)
-                                .textFieldStyle(RoundedBorderTextFieldStyle())
+                                .textFieldStyle(.roundedBorder)
                                 .disabled(true)
                             
-                            Button("Browse...") {
+                            Button("Browse") {
                                 selectFolder()
                             }
+                            .buttonStyle(.bordered)
                         }
                         
                         if !repositoryPath.isEmpty && !FileManager.default.fileExists(atPath: repositoryPath) {
@@ -60,29 +83,31 @@ struct EditRepositoryView: View {
                         }
                     }
                 }
-                .padding(.horizontal)
+                .padding()
+            }
+            
+            Divider()
+            
+            // Action Buttons - Make them consistent
+            HStack(spacing: 12) {
+                Button("Cancel") {
+                    dismiss()
+                }
+                .buttonStyle(.bordered)
+                .keyboardShortcut(.escape)
                 
                 Spacer()
                 
-                HStack {
-                    Button("Cancel") {
-                        dismiss()
-                    }
-                    .keyboardShortcut(.escape)
-                    
-                    Spacer()
-                    
-                    Button("Save Changes") {
-                        saveChanges()
-                    }
-                    .buttonStyle(.borderedProminent)
-                    .disabled(repositoryName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty || repositoryPath.isEmpty)
-                    .keyboardShortcut(.return)
+                Button("Save Changes") {
+                    saveChanges()
                 }
-                .padding()
+                .buttonStyle(.borderedProminent)
+                .disabled(!isFormValid)
+                .keyboardShortcut(.return)
             }
+            .padding()
         }
-        .frame(width: 500, height: 350)
+        .frame(width: 500, height: 400)
         .onAppear {
             repositoryName = repository.name
             repositoryDescription = repository.description
@@ -95,12 +120,17 @@ struct EditRepositoryView: View {
         }
     }
     
+    private var isFormValid: Bool {
+        !repositoryName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty && !repositoryPath.isEmpty
+    }
+    
     private func selectFolder() {
         let panel = NSOpenPanel()
         panel.canChooseFiles = false
         panel.canChooseDirectories = true
         panel.allowsMultipleSelection = false
         panel.prompt = "Select Folder"
+        panel.message = "Choose the folder containing your repository"
         panel.directoryURL = URL(fileURLWithPath: repositoryPath)
         
         if panel.runModal() == .OK {
