@@ -174,10 +174,14 @@ jobs:
               env:
                   GH_TOKEN: ${{ github.token }}
               run: |
+                  # Delete existing asset if it exists, then upload new one
+                  gh release delete-asset ${{ steps.version.outputs.tag }} MirageDock.app.zip 2>/dev/null || true
                   gh release upload ${{ steps.version.outputs.tag }} MirageDock.app.zip
 
             - name: Upload DMG
               env:
                   GH_TOKEN: ${{ github.token }}
               run: |
+                  # Delete existing asset if it exists, then upload new one
+                  gh release delete-asset ${{ steps.version.outputs.tag }} MirageDock.dmg 2>/dev/null || true
                   gh release upload ${{ steps.version.outputs.tag }} MirageDock.dmg
