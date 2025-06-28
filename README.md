@@ -2,6 +2,8 @@
 
 A lightweight macOS menu bar app for managing coding projects and repositories. Built with Swift, SwiftUI, and AppKit.
 
+![MirageDock Menu Bar](assets/menu-bar-select-repo.png)
+
 ## Features
 
 ### 🎯 Menu Bar Integration
@@ -16,6 +18,8 @@ A lightweight macOS menu bar app for managing coding projects and repositories. 
 -   Each project can contain multiple repositories
 -   Organize repositories with custom names
 -   Folder path validation
+
+![Create Project](assets/create-project.png)
 
 ### 🚀 VS Code Integration
 
@@ -35,6 +39,8 @@ A lightweight macOS menu bar app for managing coding projects and repositories. 
 -   Sidebar navigation for easy project browsing
 -   Modal sheets for adding/editing projects and repositories
 -   Folder browser integration using NSOpenPanel
+
+![Add Repository](assets/add-repository.png)
 
 ## Requirements
 
@@ -125,6 +131,8 @@ MirageDock Menu
 -   **Hierarchical**: Projects contain multiple repositories
 -   **Flexible**: Custom names for both projects and repositories
 -   **Validated**: Real-time path validation with visual feedback
+
+![Manage Project Repositories](assets/manage-project-repos.png)
 
 ### Data Storage
 
