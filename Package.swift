@@ -3,7 +3,6 @@ import PackageDescription
 
 let package = Package(
     name: "MirageDock",
-    version: "1.0.0",
     platforms: [
         .macOS(.v13)
     ],
