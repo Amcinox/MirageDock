@@ -51,24 +51,31 @@ jobs:
             - name: Get Version
               id: version
               run: |
-                  # Get version from git tag or use default
+                  # Get version from git tag or use timestamp-based version
                   if git describe --tags --abbrev=0 2>/dev/null; then
                       VERSION=$(git describe --tags --abbrev=0 | sed 's/^v//')
+                      TAG="v$VERSION"
                   else
-                      VERSION="1.0.0"
+                      # Use timestamp-based version to avoid conflicts
+                      TIMESTAMP=$(date +"%Y%m%d.%H%M%S")
+                      VERSION="1.0.0-$TIMESTAMP"
+                      TAG="v$VERSION"
                   fi
                   echo "version=$VERSION" >> $GITHUB_OUTPUT
-                  echo "tag=v$VERSION" >> $GITHUB_OUTPUT
+                  echo "tag=$TAG" >> $GITHUB_OUTPUT
 
-            - name: Create Release
+            - name: Create or Update Release
               id: create_release
               env:
                   GH_TOKEN: ${{ github.token }}
               run: |
-                  # Create release using GitHub CLI
-                  gh release create ${{ steps.version.outputs.tag }} \
-                      --title "MirageDock ${{ steps.version.outputs.version }}" \
-                      --notes "## 🚀 MirageDock ${{ steps.version.outputs.version }}
+                  # Check if release already exists
+                  if gh release view ${{ steps.version.outputs.tag }} 2>/dev/null; then
+                      echo "Release ${{ steps.version.outputs.tag }} already exists, updating..."
+                      # Update existing release
+                      gh release edit ${{ steps.version.outputs.tag }} \
+                          --title "MirageDock ${{ steps.version.outputs.version }}" \
+                          --notes "## 🚀 MirageDock ${{ steps.version.outputs.version }}
 
                       ### ✨ What's New
                       - Enhanced Settings UI with categorized editor selection
@@ -76,6 +83,7 @@ jobs:
                       - Improved card interaction with full-area clickability
                       - Custom app icon support
                       - Sandbox-compatible editor integration
+                      - **NEW**: Code signing to prevent 'damaged app' warnings
 
                       ### 🎯 Features
                       - **Multi-Editor Support**: VS Code, Cursor, Sublime Text, Atom, Vim, JetBrains IDEs, Xcode, and custom editors
@@ -99,17 +107,68 @@ jobs:
                       - Improved editor card interaction
                       - Added custom icon support
                       - Fixed sandbox compatibility issues
+                      - **Added code signing** to prevent macOS 'damaged app' warnings
 
                       ### 🏗️ Build Info
                       - Built with Swift 5.9
                       - macOS 13.0+ compatible
                       - Sandboxed for security
+                      - Code-signed for macOS compatibility
+
+                      ---
+
+                      **Built automatically on ${{ github.event.head_commit.timestamp }}**"
+                  else
+                      echo "Creating new release ${{ steps.version.outputs.tag }}..."
+                      # Create new release
+                      gh release create ${{ steps.version.outputs.tag }} \
+                          --title "MirageDock ${{ steps.version.outputs.version }}" \
+                          --notes "## 🚀 MirageDock ${{ steps.version.outputs.version }}
+
+                      ### ✨ What's New
+                      - Enhanced Settings UI with categorized editor selection
+                      - Fixed Cursor editor detection
+                      - Improved card interaction with full-area clickability
+                      - Custom app icon support
+                      - Sandbox-compatible editor integration
+                      - **NEW**: Code signing to prevent 'damaged app' warnings
+
+                      ### 🎯 Features
+                      - **Multi-Editor Support**: VS Code, Cursor, Sublime Text, Atom, Vim, JetBrains IDEs, Xcode, and custom editors
+                      - **Smart Detection**: Automatically detects installed editors
+                      - **Menu Bar Integration**: Always accessible from menu bar
+                      - **Project Management**: Organize repositories by projects
+                      - **Modern UI**: Beautiful, responsive interface
+
+                      ### 📦 Installation
+                      1. Download \`MirageDock.dmg\`
+                      2. Drag MirageDock to Applications
+                      3. Launch and configure your preferred editor
+
+                      ### 🔧 Requirements
+                      - macOS 13.0 or later
+                      - Your preferred code editor (optional)
+
+                      ### 📝 Changelog
+                      - Fixed Cursor editor bundle identifier
+                      - Enhanced Settings UI with better visual hierarchy
+                      - Improved editor card interaction
+                      - Added custom icon support
+                      - Fixed sandbox compatibility issues
+                      - **Added code signing** to prevent macOS 'damaged app' warnings
+
+                      ### 🏗️ Build Info
+                      - Built with Swift 5.9
+                      - macOS 13.0+ compatible
+                      - Sandboxed for security
+                      - Code-signed for macOS compatibility
 
                       ---
 
                       **Built automatically on ${{ github.event.head_commit.timestamp }}**" \
-                      --draft=false \
-                      --prerelease=false
+                          --draft=false \
+                          --prerelease=false
+                  fi
 
             - name: Upload App Bundle
               env:
